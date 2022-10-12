@@ -1,0 +1,26 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:13307/foodwant??rewriteBatchedStatements=true
+      username: root
+      password: root
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 開啟駝峰映射
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID  # 開啟全域ID自增
+
+logging:
+  level:
+    com.foodwant: debug
+
+  pattern:
+    console: "%d{yyyy-MM-dd} [%thread] %-5level %logger{50} - %msg%n"
+
+foodwant:
+  path: C:\Users\wayne\Desktop\maven-workspace\Foodwant\foodwant_img\
