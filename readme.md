@@ -1,4 +1,7 @@
-# 專案-外賣網
+# 專案-外送網
+
+[![hackmd-github-sync-badge](https://hackmd.io/Z2pGqWWlQeugZ9rVnqiCcQ/badge)](https://hackmd.io/Z2pGqWWlQeugZ9rVnqiCcQ)
+
 
 ## 目標用戶
 1. 後台管理員: 有總權限
@@ -151,6 +154,8 @@
 3. Service調用Mapper查詢分頁數據
 4. Controller將查詢到的分頁數據response給瀏覽器
 5. 瀏覽器接收分頁數據並通過Elemnet UI的Table展示
+
+>此時回傳的page中的records中的empId為Snowflake產生，在java中為long類型，精度足夠，但在分頁插詢後返回每一條數據給瀏覽器時會透過消息轉換器將Employee物件轉成json格式給瀏覽器，然而js只能處理16位，會造成精度損失，因此需要將js要處理的Id數據變更為String，此時要對消息轉換器進行擴展，其中`.addSerializer(Long.class, ToStringSerializer.instance)`使得Long類型數據可以轉換成String類型
 
 ### 3. 禁用員工帳號
     
@@ -450,8 +455,8 @@ CategoryService中又`Autowired`SetmealService，造成依賴循環
 解決方法: 在如此一來，SetmealService中`@Autowired`CategoryService時將上`@Lazy(true)`註解
 ```java
 @Autowired
-    @Lazy(true)
-    private CategoryService categoryService;
+@Lazy(true)
+private CategoryService categoryService;
 ```
 功用是讓此bean延遲加載，等到要用的時候再加載
 
@@ -461,10 +466,96 @@ CategoryService中又`Autowired`SetmealService，造成依賴循環
 
 ## 使用者介面
     
-待
+### 1. 登入
+發送驗證碼
     
+|          | discription |
+|:--------:|:-----------:|
+|   URI    |  /user/sendMsg  |
+|  method  |   POST    |
+| request  | phonenumber  by ajax  |
+| response |  R<String>  |
+    
+
+    
+### 2. 頁面展示
+
+先由category表查出所有分類，再依據各分類的id和種類，去菜色表或是套餐表查對應的數據
+    
+### 3. 加入購物車
+套餐和菜色要加入購物車的請求相同，將該使用者的id還有訂購菜色/套餐的資訊插入shopping_cart表中
+|          | discription |
+|:--------:|:-----------:|
+|   URI    |  /shoppingCart/add  |
+|  method  |   POST    |
+| request  |   by ajax  |
+| response |  R<ShoppingCart>  |   
+套餐
+1. amount
+2. setmealId
+3. name
+4. image
+    
+菜色
+1. amount
+2. dishFlavor
+3. dishId
+4. name
+5. image
+    
+### 4. 列出購物車數據
+根據Session中的使用者id於shopping_cart表中查詢對應的購物明細，只要Session中帶有userId就可以取得對應購物車
+|          | discription |
+|:--------:|:-----------:|
+|   URI    |  /shoppingCart/list  |
+|  method  |   GET    |
+| request  |   by ajax  |
+| response |  R<Lis<ShoppingCart>>  |    
+
+### 5.清空購物車
+根據Session中的使用者id於shopping_cart表中刪除所有對應的數據
+|          | discription |
+|:--------:|:-----------:|
+|   URI    |  /shoppingCart/clean  |
+|  method  |   DELETE    |
+| request  |     |
+| response |  R<String>  | 
+    
+### 6. 購物車內容減少
+根據傳入的菜色/套餐資訊，於shopping_cart表中減少number，當number=0時刪除
+|          |    discription    |
+|:--------:|:-----------------:|
+|   URI    | /shoppingCart/sub |
+|  method  |      DELETE       |
+| request  |      ShoppingCart by ajax             |
+| response |     R<String>     |
+    
+### 6. 使用者下單
+使用DB
+1. orders ->訂購者基本資訊
+2. order_detail ->訂購的商品資訊
+    
+結帳確認頁面add-order.html
+1. 請求使用預設地址
+2. 請求購物車內容
+3. 下單(購物車內容由session中的userId去shopping_cart表取得)
+
+|          |  discription  |
+|:--------:|:-------------:|
+|   URI    | /order/submit |
+|  method  |    DELETE     |
+| request  |(addressBook, payMethod, remark) by ajax               |
+| response |   R<String>   |
+   
+- AtomicInteger    
+    
+### 7. 更換vant中文版
+尚未完成
 
 ## 優化
 >如果只剩下一道肉，廚師不做了，這時候，張三點了份肉，李四也點了份肉，但是現在只剩下一份了，這種情況如何處理呢？如何保證數據的統一，不出現重複和負數
 ->樂觀鎖
+    
+    
+>如果有一萬個客戶在線上，那Server就要儲存10,000個不同人的session，除了對Server造成負擔外，如果是有多台主機，還要處理主機間session要怎麼共享的問題-->使用reddis
 ###### tags: `SSM framwork`
