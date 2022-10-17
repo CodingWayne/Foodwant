@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.foodwant.foodwant.common.BaseContext;
 import com.foodwant.foodwant.common.R;
+import com.foodwant.foodwant.common.UserBaseContext;
 import com.foodwant.foodwant.entity.AddressBook;
 import com.foodwant.foodwant.service.AddressBookService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,13 @@ public class AddressBookController {
      */
     @PostMapping
     public R<AddressBook> save(@RequestBody AddressBook addressBook) {
-        addressBook.setUserId(BaseContext.getCurrentId());
+        addressBook.setUserId(UserBaseContext.getCurrentId());
+
         log.info("addressBook:{}", addressBook);
         addressBookService.save(addressBook);
+        LambdaUpdateWrapper<AddressBook> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(AddressBook::getUpdateUser,UserBaseContext.getCurrentId()).set(AddressBook::getCreateUser,UserBaseContext.getCurrentId()).eq(AddressBook::getUserId,UserBaseContext.getCurrentId());
+        addressBookService.update(updateWrapper);
         return R.success(addressBook);
     }
 
@@ -41,7 +46,7 @@ public class AddressBookController {
     public R<AddressBook> setDefault(@RequestBody AddressBook addressBook) {
         log.info("addressBook:{}", addressBook);
         LambdaUpdateWrapper<AddressBook> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(AddressBook::getUserId, BaseContext.getCurrentId());
+        wrapper.eq(AddressBook::getUserId, UserBaseContext.getCurrentId());
         wrapper.set(AddressBook::getIsDefault, 0);
         //SQL:update address_book set is_default = 0 where user_id = ?
         addressBookService.update(wrapper);
@@ -71,7 +76,7 @@ public class AddressBookController {
     @GetMapping("default")
     public R<AddressBook> getDefault() {
         LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AddressBook::getUserId, BaseContext.getCurrentId());
+        queryWrapper.eq(AddressBook::getUserId, UserBaseContext.getCurrentId());
         queryWrapper.eq(AddressBook::getIsDefault, 1);
 
         //SQL:select * from address_book where user_id = ? and is_default = 1
@@ -89,7 +94,7 @@ public class AddressBookController {
      */
     @GetMapping("/list")
     public R<List<AddressBook>> list(AddressBook addressBook) {
-        addressBook.setUserId(BaseContext.getCurrentId());
+        addressBook.setUserId(UserBaseContext.getCurrentId());
         log.info("addressBook:{}", addressBook);
 
         //條件
@@ -99,5 +104,33 @@ public class AddressBookController {
 
         //SQL:select * from address_book where user_id = ? order by update_time desc
         return R.success(addressBookService.list(queryWrapper));
+    }
+
+    /**
+     * 更改地址
+     * @param addressBook
+     * @return
+     */
+    @PutMapping
+    public R<String> update(@RequestBody AddressBook addressBook){
+        addressBookService.updateById(addressBook);
+
+
+
+        return R.success("已修改地址");
+    }
+
+    /**
+     * 刪除地址
+     * @param
+     * @return
+     */
+    @DeleteMapping
+    public R<String> remove(Long ids){
+
+        addressBookService.removeById(ids);
+
+        return R.success("已刪除地址");
+
     }
 }

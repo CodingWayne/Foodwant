@@ -7,6 +7,18 @@ spring:
       url: jdbc:mysql://localhost:13307/foodwant??rewriteBatchedStatements=true
       username: root
       password: root
+  mail:
+    host: smtp.gmail.com #SMTP伺服器地址
+    port: 587
+    username: a0931228191@gmail.com #帳號
+    password: uvmhphadvicnefjm
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true # 開啟駝峰映射

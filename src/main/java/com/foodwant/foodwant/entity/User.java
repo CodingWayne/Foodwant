@@ -23,7 +23,7 @@ public class User implements Serializable {
 
 
     //手機號碼
-    private String phone;
+    private String mail;
 
 
     //性別 0 女 1 男

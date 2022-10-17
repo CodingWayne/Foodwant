@@ -3,6 +3,7 @@ package com.foodwant.foodwant.filter;
 import com.alibaba.fastjson.JSON;
 import com.foodwant.foodwant.common.BaseContext;
 import com.foodwant.foodwant.common.R;
+import com.foodwant.foodwant.common.UserBaseContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -74,7 +75,7 @@ public class LoginCheckFilter implements Filter {
         if(request.getSession().getAttribute("user") != null){
 
             Long userId = (Long) request.getSession().getAttribute("user");
-            BaseContext.setCurrentId(userId);
+            UserBaseContext.setCurrentId(userId);
 
             log.info("使用者已登入, id: {}",request.getSession().getAttribute("user"));
             filterChain.doFilter(request, response);//放行
