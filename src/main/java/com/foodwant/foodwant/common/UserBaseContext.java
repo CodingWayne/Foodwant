@@ -7,7 +7,7 @@ package com.foodwant.foodwant.common;
  * @author JIA-YANG, LAI
  * @create 2022-10-08 下午 04:36
  */
-public class BaseContext {
+public class UserBaseContext {
     private static ThreadLocal<Long> threadLocal= new ThreadLocal<>();//generic為存id的long
 
     public static void setCurrentId(Long id){
@@ -18,6 +18,6 @@ public class BaseContext {
     public static Long getCurrentId(){
         return  threadLocal.get();
     }
-
+ 
 
 }

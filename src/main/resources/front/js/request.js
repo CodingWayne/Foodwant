@@ -5,7 +5,7 @@
     // axios中請求配置有baseURL選項，表示請求URL公共部分
     baseURL: '/',
     // 超時
-    timeout: 10000
+    timeout: 1000000
   })
   // request攔截器
   service.interceptors.request.use(config => {

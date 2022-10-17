@@ -72,6 +72,20 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--        mail-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+<!--        處理LocalDate字段映射-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-typehandlers-jsr310</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>

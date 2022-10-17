@@ -69,13 +69,13 @@
             <span>{{ getOrderType(row) }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="使用者"></el-table-column>
+        <el-table-column prop="consignee" label="使用者"></el-table-column>
         <el-table-column prop="phone" label="手機號碼"></el-table-column>
         <el-table-column prop="address" label="地址" show-overflow-tooltip></el-table-column>
         <el-table-column prop="orderTime" label="下單時間" min-width="100"></el-table-column>
         <el-table-column prop="amount" label="實收金額">
           <template slot-scope="{ row }">
-            <span>￥{{ row.amount }}</span>
+            <span>${{ row.amount }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="btn" label="操作">
